@@ -1,0 +1,126 @@
+ 
+
+1) Request Token URL : 
+
+ 
+
+https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.google.com/m8/feeds&access_type=offline
+
+ 
+
+2) Access and RefreshToken URL :
+
+ 
+
+https://www.googleapis.com/oauth2/v4/token
+
+ 
+
+3) Google Developer Console:
+
+ 
+
+https://console.developers.google.com/
+
+ 
+
+ 
+
+4) Get Contact URL :
+
+ 
+
+https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=2
+
+ 
+
+ 
+
+5 ) Custom Function Code:
+
+ 
+
+map = map();
+
+contacts_response = zoho.crm.invokeConnector(("googleoct15.googleoct15.getcontacts"), map);
+
+response = (contacts_response.get("response")).toMap();
+
+feed = (response.get("feed")).toMap();
+
+entry_list = feed.get("entry").toJSONList();
+
+//email = "";
+
+for each entry in entry_list
+
+{
+
+temp = map();
+
+temp = entry.toMap();
+
+title = (temp.get("title")).toMap();
+
+   
+
+if (temp.containKey("gd$email"))
+
+{
+
+email_list = temp.get("gd$email").toJSONList();
+
+for each email in email_list
+
+{
+
+email_map = email.toMap();
+
+email = email_map.get("address");
+
+info "email::::" + email;
+
+}
+
+}
+
+fieldMap = map();
+
+fieldMap.put("Last_Name", email);
+
+fieldMap.put("Email", email);
+
+fieldMap.put("Lead_Source", "Google");
+
+info "fieldMap:::" + fieldMap;
+
+l = List();
+
+l.add(fieldMap);
+
+dataMap = map();
+
+dataMap.put("module", "Contacts");
+
+dataMap.put("data", l);
+
+//function to push data to CRM
+
+response = zoho.crm.invokeConnector("crm.create", dataMap);
+
+info "response----" + response;
+
+}
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
