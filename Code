@@ -21,90 +21,16 @@
    https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=20
 
 
-6) Custom Function Code:
- 
 
-			map = map();
-
-			contacts_response = zoho.crm.invokeConnector(("googleoct15.googleoct15.getcontacts"), map);
-
-			response = (contacts_response.get("response")).toMap();
-
-			feed = (response.get("feed")).toMap();
-
-			entry_list = feed.get("entry").toJSONList();
-
-
-			for each entry in entry_list
-
-			{
-
-			temp = map();
-
-			temp = entry.toMap();
-
-			title = (temp.get("title")).toMap();
-
-
-
-			if (temp.containKey("gd$email"))
-
-			{
-
-			email_list = temp.get("gd$email").toJSONList();
-
-			for each email in email_list
-
-			{
-
-			email_map = email.toMap();
-
-			email = email_map.get("address");
-
-			info "email::::" + email;
-
-			}
-
-			}
-
-			fieldMap = map();
-
-			fieldMap.put("Last_Name", email);
-
-			fieldMap.put("Email", email);
-
-			fieldMap.put("Lead_Source", "Google");
-
-			info "fieldMap:::" + fieldMap;
-
-			l = List();
-
-			l.add(fieldMap);
-
-			dataMap = map();
-
-			dataMap.put("module", "Contacts");
-
-			dataMap.put("data", l);
-
-			//function to push data to CRM
-
-			response = zoho.crm.invokeConnector("crm.create", dataMap);
-
-			info "response----" + response;
-
-			}
-
-
-7) POST Contact URL : https://www.google.com/m8/feeds/contacts/default/full/
+6) POST Contact URL : https://www.google.com/m8/feeds/contacts/default/full/
 
  
 
-8) POST Contact Header :  Content-type:application/atom+xml
+7) POST Contact Header :  Content-type:application/atom+xml
 
  
 
-9) POST Contact Response body:
+8) POST Contact Response body:
 
  
 
@@ -185,8 +111,134 @@
 		</atom:entry>
 
 
+9) Push Contact from CRM to Google  - Custom Function:
 
  
+
+    dynamic_map=Map();
+
+    cont_resp = zoho.crm.getRecordById("Contacts", (input.contact.get("Contacts.ID")).toLong());  
+
+    info cont_resp;
+
+    firstName = cont_resp.get("First Name");   
+
+    lastName = cont_resp.get("Last Name");   
+
+    email = cont_resp.get("Email");   
+
+    mobile = cont_resp.get("Mobile");  
+
+    city = cont_resp.get("Mailing City"); 
+
+    street = cont_resp.get("Mailing Street");  
+
+    state = cont_resp.get("Mailing State");  
+
+    zip = cont_resp.get("Mailing Zip");  
+
+    country = cont_resp.get("Mailing Country");  
+
+    //Map all dynamic params to your desired values 
+
+    dynamic_map.put("Given_Name",firstName);
+
+    dynamic_map.put("Family_Name",lastName);
+
+    dynamic_map.put("Email_Id",email);
+
+    dynamic_map.put("Phone_Number",mobile);
+
+    dynamic_map.put("City",city);
+
+    dynamic_map.put("Street",street);
+
+    dynamic_map.put("Region",state);
+
+    dynamic_map.put("Postal_Code",zip);
+
+    dynamic_map.put("Country",country);
+
+    info dynamic_map;
+
+    crm_response = zoho.crm.invokeconnector("googleoct15.googleoct15.postcontact",dynamic_map);
+
+    info crm_response;
+
+ 
+ 10) Push Contacts From Google to CRM - Custom Function Code:
+ 
+
+			map = map();
+
+			contacts_response = zoho.crm.invokeConnector(("googleoct15.googleoct15.getcontacts"), map);
+
+			response = (contacts_response.get("response")).toMap();
+
+			feed = (response.get("feed")).toMap();
+
+			entry_list = feed.get("entry").toJSONList();
+
+
+			for each entry in entry_list
+
+			{
+
+			temp = map();
+
+			temp = entry.toMap();
+
+			title = (temp.get("title")).toMap();
+
+
+
+			if (temp.containKey("gd$email"))
+
+			{
+
+			email_list = temp.get("gd$email").toJSONList();
+
+			for each email in email_list
+
+			{
+
+			email_map = email.toMap();
+
+			email = email_map.get("address");
+
+			info "email::::" + email;
+
+			}
+
+			}
+
+			fieldMap = map();
+
+			fieldMap.put("Last_Name", email);
+
+			fieldMap.put("Email", email);
+
+			fieldMap.put("Lead_Source", "Google");
+
+			info "fieldMap:::" + fieldMap;
+
+			l = List();
+
+			l.add(fieldMap);
+
+			dataMap = map();
+
+			dataMap.put("module", "Contacts");
+
+			dataMap.put("data", l);
+
+			//function to push data to CRM
+
+			response = zoho.crm.invokeConnector("crm.create", dataMap);
+
+			info "response----" + response;
+
+			}
 
  
 
