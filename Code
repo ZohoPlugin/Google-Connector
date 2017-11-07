@@ -115,130 +115,130 @@
 
  
 
-    dynamic_map=Map();
+	    dynamic_map=Map();
 
-    cont_resp = zoho.crm.getRecordById("Contacts", (input.contact.get("Contacts.ID")).toLong());  
+	    cont_resp = zoho.crm.getRecordById("Contacts", (input.contact.get("Contacts.ID")).toLong());  
 
-    info cont_resp;
+	    info cont_resp;
 
-    firstName = cont_resp.get("First Name");   
+	    firstName = cont_resp.get("First Name");   
 
-    lastName = cont_resp.get("Last Name");   
+	    lastName = cont_resp.get("Last Name");   
 
-    email = cont_resp.get("Email");   
+	    email = cont_resp.get("Email");   
 
-    mobile = cont_resp.get("Mobile");  
+	    mobile = cont_resp.get("Mobile");  
 
-    city = cont_resp.get("Mailing City"); 
+	    city = cont_resp.get("Mailing City"); 
 
-    street = cont_resp.get("Mailing Street");  
+	    street = cont_resp.get("Mailing Street");  
 
-    state = cont_resp.get("Mailing State");  
+	    state = cont_resp.get("Mailing State");  
 
-    zip = cont_resp.get("Mailing Zip");  
+	    zip = cont_resp.get("Mailing Zip");  
 
-    country = cont_resp.get("Mailing Country");  
+	    country = cont_resp.get("Mailing Country");  
 
-    //Map all dynamic params to your desired values 
+	    //Map all dynamic params to your desired values 
 
-    dynamic_map.put("Given_Name",firstName);
+	    dynamic_map.put("Given_Name",firstName);
 
-    dynamic_map.put("Family_Name",lastName);
+	    dynamic_map.put("Family_Name",lastName);
 
-    dynamic_map.put("Email_Id",email);
+	    dynamic_map.put("Email_Id",email);
 
-    dynamic_map.put("Phone_Number",mobile);
+	    dynamic_map.put("Phone_Number",mobile);
 
-    dynamic_map.put("City",city);
+	    dynamic_map.put("City",city);
 
-    dynamic_map.put("Street",street);
+	    dynamic_map.put("Street",street);
 
-    dynamic_map.put("Region",state);
+	    dynamic_map.put("Region",state);
 
-    dynamic_map.put("Postal_Code",zip);
+	    dynamic_map.put("Postal_Code",zip);
 
-    dynamic_map.put("Country",country);
+	    dynamic_map.put("Country",country);
 
-    info dynamic_map;
+	    info dynamic_map;
 
-    crm_response = zoho.crm.invokeconnector("googleoct15.googleoct15.postcontact",dynamic_map);
+	    crm_response = zoho.crm.invokeconnector("googleoct15.googleoct15.postcontact",dynamic_map);
 
-    info crm_response;
+	    info crm_response;
 
  
  10) Push Contacts From Google to CRM - Custom Function Code:
  
 
-			map = map();
+        map = map();
 
-			contacts_response = zoho.crm.invokeConnector(("googleoct15.googleoct15.getcontacts"), map);
+        contacts_response = zoho.crm.invokeConnector(("googleoct15.googleoct15.getcontacts"), map);
 
-			response = (contacts_response.get("response")).toMap();
+        response = (contacts_response.get("response")).toMap();
 
-			feed = (response.get("feed")).toMap();
+        feed = (response.get("feed")).toMap();
 
-			entry_list = feed.get("entry").toJSONList();
-
-
-			for each entry in entry_list
-
-			{
-
-			temp = map();
-
-			temp = entry.toMap();
-
-			title = (temp.get("title")).toMap();
+        entry_list = feed.get("entry").toJSONList();
 
 
+        for each entry in entry_list
 
-			if (temp.containKey("gd$email"))
+        {
 
-			{
+        temp = map();
 
-			email_list = temp.get("gd$email").toJSONList();
+        temp = entry.toMap();
 
-			for each email in email_list
+        title = (temp.get("title")).toMap();
 
-			{
 
-			email_map = email.toMap();
 
-			email = email_map.get("address");
+        if (temp.containKey("gd$email"))
 
-			info "email::::" + email;
+        {
 
-			}
+        email_list = temp.get("gd$email").toJSONList();
 
-			}
+        for each email in email_list
 
-			fieldMap = map();
+        {
 
-			fieldMap.put("Last_Name", email);
+        email_map = email.toMap();
 
-			fieldMap.put("Email", email);
+        email = email_map.get("address");
 
-			fieldMap.put("Lead_Source", "Google");
+        info "email::::" + email;
 
-			info "fieldMap:::" + fieldMap;
+        }
 
-			l = List();
+        }
 
-			l.add(fieldMap);
+        fieldMap = map();
 
-			dataMap = map();
+        fieldMap.put("Last_Name", email);
 
-			dataMap.put("module", "Contacts");
+        fieldMap.put("Email", email);
 
-			dataMap.put("data", l);
+        fieldMap.put("Lead_Source", "Google");
 
-			//function to push data to CRM
+        info "fieldMap:::" + fieldMap;
 
-			response = zoho.crm.invokeConnector("crm.create", dataMap);
+        l = List();
 
-			info "response----" + response;
+        l.add(fieldMap);
 
-			}
+        dataMap = map();
+
+        dataMap.put("module", "Contacts");
+
+        dataMap.put("data", l);
+
+        //function to push data to CRM
+
+        response = zoho.crm.invokeConnector("crm.create", dataMap);
+
+        info "response----" + response;
+
+        }
 
  
 
