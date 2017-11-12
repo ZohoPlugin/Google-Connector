@@ -44,11 +44,11 @@
 
 		<gd:name>
 
-		<gd:givenName>"${Given_Name}"</gd:givenName>
+		<gd:givenName>"${First_Name}"</gd:givenName>
 
-		<gd:familyName>${Family_Name}</gd:familyName>
+		<gd:familyName>${Last_Name}</gd:familyName>
 
-		<gd:fullName>${Given_Name} ${Family_Name}</gd:fullName>
+		<gd:fullName>${First_Name} ${Last_Name}</gd:fullName>
 
 		</gd:name>
 
@@ -58,7 +58,7 @@
 
 		primary="true"
 
-		address="${Email_Id}" displayName="${Given_Name}"/>
+		address="${Email_Id}" displayName="${First_Name}"/>
 
 		<gd:email rel="http://schemas.google.com/g/2005#home"
 
@@ -90,19 +90,18 @@
 
 		primary="true">
 
-		<gd:city>${City}</gd:city>
+		<gd:city></gd:city>
 
-		<gd:street>${Street}</gd:street>
+		<gd:street></gd:street>
 
-		<gd:region>${Region}</gd:region>
+		<gd:region></gd:region>
 
-		<gd:postcode>${Postal_Code}</gd:postcode>
+		<gd:postcode></gd:postcode>
 
-		<gd:country>${Country}</gd:country>
+		<gd:country></gd:country>
 
 		<gd:formattedAddress>
 
-		${Address}
 
 		</gd:formattedAddress>
 
